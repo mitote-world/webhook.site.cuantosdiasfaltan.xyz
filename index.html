@@ -32,15 +32,15 @@
       <div id="quick" class="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm">Tip: usa los botones para búsquedas comunes.</div>
 
       <h3 class="mt-5 text-lg font-bold">Festivos comunes en México</h3>
-      <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-700">
-        <li>1 de enero - Año Nuevo</li>
-        <li>Primer lunes de febrero - Constitución</li>
-        <li>Tercer lunes de marzo - Natalicio de Benito Juárez</li>
-        <li>1 de mayo - Día del Trabajo</li>
-        <li>16 de septiembre - Independencia</li>
-        <li>Tercer lunes de noviembre - Revolución Mexicana</li>
-        <li>25 de diciembre - Navidad</li>
-      </ul>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <button data-holiday="new_year" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold hover:bg-slate-50">1 de enero - Año Nuevo</button>
+        <button data-holiday="constitution" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold hover:bg-slate-50">Primer lunes de febrero - Constitución</button>
+        <button data-holiday="juarez" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold hover:bg-slate-50">Tercer lunes de marzo - Natalicio de Benito Juárez</button>
+        <button data-holiday="labor_day" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold hover:bg-slate-50">1 de mayo - Día del Trabajo</button>
+        <button data-holiday="independence" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold hover:bg-slate-50">16 de septiembre - Independencia</button>
+        <button data-holiday="revolution" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold hover:bg-slate-50">Tercer lunes de noviembre - Revolución Mexicana</button>
+        <button data-holiday="christmas" class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold hover:bg-slate-50">25 de diciembre - Navidad</button>
+      </div>
 
       <div class="mt-5 flex flex-col gap-2 sm:flex-row">
         <a class="inline-flex items-center justify-center rounded-xl bg-teal-700 px-4 py-3 text-sm font-bold text-white hover:bg-teal-800" href="https://miqr.mx" target="_blank" rel="noopener">Ver herramienta</a>
@@ -68,12 +68,48 @@
       return new Date(y,m+1,1);
     }
 
+    function firstMonday(year, monthIndex){
+      const d=new Date(year,monthIndex,1);
+      d.setDate(1+((8-d.getDay())%7));
+      return d;
+    }
+
+    function thirdMonday(year, monthIndex){
+      const d=firstMonday(year,monthIndex);
+      d.setDate(d.getDate()+14);
+      return d;
+    }
+
+    function upcomingDate(makeDate){
+      let d=makeDate(now.getFullYear());
+      if(d<new Date(now.getFullYear(),now.getMonth(),now.getDate())){
+        d=makeDate(now.getFullYear()+1);
+      }
+      return d;
+    }
+
     document.querySelectorAll('button[data-tag]').forEach(b=>b.onclick=()=>{
       const t=b.dataset.tag;
       let x;
       if(t==='quincena'){x=nextQuincena();q.textContent='Consulta más fechas financieras y de campañas.';out(x,'Próxima quincena')}
       if(t==='navidad'){x=new Date(now.getFullYear(),11,25);if(x<now)x=new Date(now.getFullYear()+1,11,25);q.textContent='Temporada alta: prepara promos con tiempo.';out(x,'Navidad')}
       if(t==='anio'){x=new Date(now.getFullYear()+1,0,1);q.textContent='Arranca año con campañas y metas claras.';out(x,'Año nuevo')}
+    });
+
+    document.querySelectorAll('button[data-holiday]').forEach(btn=>btn.onclick=()=>{
+      const key=btn.dataset.holiday;
+      let x;
+      if(key==='new_year') x=upcomingDate(y=>new Date(y,0,1));
+      if(key==='constitution') x=upcomingDate(y=>firstMonday(y,1));
+      if(key==='juarez') x=upcomingDate(y=>thirdMonday(y,2));
+      if(key==='labor_day') x=upcomingDate(y=>new Date(y,4,1));
+      if(key==='independence') x=upcomingDate(y=>new Date(y,8,16));
+      if(key==='revolution') x=upcomingDate(y=>thirdMonday(y,10));
+      if(key==='christmas') x=upcomingDate(y=>new Date(y,11,25));
+      if(!x) return;
+      f.value=`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;
+      q.textContent='Fecha cargada automáticamente desde festivos comunes.';
+      out(x,btn.textContent);
     });
   </script>
 </body>
