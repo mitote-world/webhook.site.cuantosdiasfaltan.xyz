@@ -20,9 +20,7 @@
         <button id="calc" class="rounded-xl bg-orange-600 px-4 py-2 font-bold text-white hover:bg-orange-700">Calcular</button>
       </div>
 
-      <div id="r" class="mt-4 rounded-xl border border-orange-200 bg-orange-50 p-4 font-semibold">Selecciona una fecha para empezar.</div>
-      <img id="gifMain" class="mt-4 w-full rounded-xl border border-orange-200 object-cover" src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="GIF contador de dias" loading="lazy" />
-    </section>
+      <div id="r" class="mt-4 rounded-xl border border-orange-200 bg-orange-50 p-4 font-semibold">Selecciona una fecha para empezar.</div>    </section>
 
     <section class="mt-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:mt-6 sm:p-8">
       <h2 class="text-xl font-bold">Fechas populares</h2>
@@ -54,39 +52,13 @@
   <script>
     const f=document.getElementById('fecha');
     const r=document.getElementById('r');
-    const q=document.getElementById('quick');
-    const gifMain=document.getElementById('gifMain');
-    const now=new Date();
-    const GIFS={
-      urgente:[
-        'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif',
-        'https://media.giphy.com/media/l3V0lsGtTMSB5YNgc/giphy.gif'
-      ],
-      medio:[
-        'https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif',
-        'https://media.giphy.com/media/111ebonMs90YLu/giphy.gif'
-      ],
-      relax:[
-        'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif',
-        'https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif'
-      ]
-    };
-    function gifByWord(word){const list=GIFS[word]||GIFS.relax;return list[Math.floor(Math.random()*list.length)]}
-    f.value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const q=document.getElementById('quick');    const now=new Date();    f.value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
     const days=(a,b)=>Math.ceil((new Date(b.getFullYear(),b.getMonth(),b.getDate())-new Date(a.getFullYear(),a.getMonth(),a.getDate()))/86400000);
 
     function out(target,label='Esa fecha'){
       const d=days(new Date(),target);
-      r.textContent=`${label}: faltan ${d} día${d===1?'':'s'} (${target.toLocaleDateString('es-MX')}).`;
-      if(d<=3){
-        gifMain.src=gifByWord('urgente');
-      } else if(d<=15){
-        gifMain.src=gifByWord('medio');
-      } else {
-        gifMain.src=gifByWord('relax');
-      }
-    }
+      r.textContent=`${label}: faltan ${d} día${d===1?'':'s'} (${target.toLocaleDateString('es-MX')}).`;    }
 
     document.getElementById('calc').onclick=()=>{if(!f.value)return;out(new Date(f.value+'T00:00:00'),'Tu fecha')};
 
