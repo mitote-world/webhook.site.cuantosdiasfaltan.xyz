@@ -55,6 +55,21 @@
     const q=document.getElementById('quick');
     const gifMain=document.getElementById('gifMain');
     const now=new Date();
+    const GIFS={
+      urgente:[
+        'https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif',
+        'https://media.giphy.com/media/l3V0lsGtTMSB5YNgc/giphy.gif'
+      ],
+      medio:[
+        'https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif',
+        'https://media.giphy.com/media/111ebonMs90YLu/giphy.gif'
+      ],
+      relax:[
+        'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif',
+        'https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif'
+      ]
+    };
+    function gifByWord(word){const list=GIFS[word]||GIFS.relax;return list[Math.floor(Math.random()*list.length)]}
     f.value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
     const days=(a,b)=>Math.ceil((new Date(b.getFullYear(),b.getMonth(),b.getDate())-new Date(a.getFullYear(),a.getMonth(),a.getDate()))/86400000);
@@ -63,11 +78,11 @@
       const d=days(new Date(),target);
       r.textContent=`${label}: faltan ${d} día${d===1?'':'s'} (${target.toLocaleDateString('es-MX')}).`;
       if(d<=3){
-        gifMain.src='https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif';
+        gifMain.src=gifByWord('urgente');
       } else if(d<=15){
-        gifMain.src='https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif';
+        gifMain.src=gifByWord('medio');
       } else {
-        gifMain.src='https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif';
+        gifMain.src=gifByWord('relax');
       }
     }
 
